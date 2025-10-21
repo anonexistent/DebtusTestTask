@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebtusTestTask.Contracts", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebtusTestTask.Utils", "DebtusTestTask.Utils\DebtusTestTask.Utils.csproj", "{C053EEA8-DAED-46D0-A642-8AE0C22F901B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebtusTestTask.Integrations.OrangeHRM", "DebtusTestTask.Integrations.OrangeHRM\DebtusTestTask.Integrations.OrangeHRM.csproj", "{48C69294-D5A5-4836-B197-78FC0B38F2F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{C053EEA8-DAED-46D0-A642-8AE0C22F901B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C053EEA8-DAED-46D0-A642-8AE0C22F901B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C053EEA8-DAED-46D0-A642-8AE0C22F901B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48C69294-D5A5-4836-B197-78FC0B38F2F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48C69294-D5A5-4836-B197-78FC0B38F2F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48C69294-D5A5-4836-B197-78FC0B38F2F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48C69294-D5A5-4836-B197-78FC0B38F2F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

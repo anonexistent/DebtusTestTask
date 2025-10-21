@@ -19,14 +19,15 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.21" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.21" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.21" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.21" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DebtusTestTask.Infrastructure\DebtusTestTask.Infrastructure.csproj" />
+    <ProjectReference Include="..\DebtusTestTask.Integrations.OrangeHRM\DebtusTestTask.Integrations.OrangeHRM.csproj" />
     <ProjectReference Include="..\DebtusTestTask.Services\DebtusTestTask.Services.csproj" />
     <ProjectReference Include="..\DebtusTestTask.Utils\DebtusTestTask.Utils.csproj" />
   </ItemGroup>
