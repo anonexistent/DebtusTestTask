@@ -1,4 +1,4 @@
-using DebtusTestTask.Application;
+using DebtusTestTask.Application.Services;
 using DebtusTestTask.Contracts.Input;
 using DebtusTestTask.Contracts.Output;
 using DebtusTestTask.Integrations.OrangeHRM;

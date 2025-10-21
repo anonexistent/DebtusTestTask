@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DebtusTestTask.Application\DebtusTestTask.Application.csproj" />
     <ProjectReference Include="..\DebtusTestTask.Models\DebtusTestTask.Models.csproj" />
   </ItemGroup>
 

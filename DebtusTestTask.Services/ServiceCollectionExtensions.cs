@@ -1,4 +1,4 @@
-﻿using DebtusTestTask.Application;
+﻿using DebtusTestTask.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DebtusTestTask.Services;

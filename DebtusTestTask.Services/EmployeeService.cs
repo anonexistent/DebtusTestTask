@@ -1,28 +1,32 @@
-﻿using DebtusTestTask.Application;
+﻿using DebtusTestTask.Application.Repositories;
+using DebtusTestTask.Application.Services;
 using DebtusTestTask.Contracts.Input;
-using DebtusTestTask.Infrastructure;
 using DebtusTestTask.Models;
 using DebtusTestTask.Utils;
-using Microsoft.EntityFrameworkCore;
 
 namespace DebtusTestTask.Services;
 
 public class EmployeeService : IEmployeeService
 {
-    private readonly DebtusContext _context;
+    private readonly IEmployeeRepository _employeeRepository;
+    private readonly ICurrencieRepository _currencieRepository;
 
-    public EmployeeService(DebtusContext context)
+    public EmployeeService(
+        ICurrencieRepository currencieRepository,
+        IEmployeeRepository employeeRepository
+        )
     {
-        _context = context;
+        _employeeRepository = employeeRepository;
+        _currencieRepository = currencieRepository;
     }
 
     public async Task<ServiceResult<Employee>> CreateEmployeeAsync(EmployeeCreateBody request)
     {
-        var currs = await _context.Currencies.ToListAsync();
+        var currs = await _currencieRepository.GetAllAsync();
 
-        var allEmps = await _context.Employees.ToListAsync();
+        var allEmps = await _employeeRepository.GetAllAsync();
 
-        var isExistendId = await _context.Employees.AnyAsync(x=>x.Id == request.Id);
+        var isExistendId = await _employeeRepository.AnyByIdAsync(request.Id);
 
         if(isExistendId)
         {
@@ -42,8 +46,7 @@ public class EmployeeService : IEmployeeService
             MiddleName = request.MiddleName,            
         };
 
-        _context.Employees.Add(employee);
-        await _context.SaveChangesAsync();
+        await _employeeRepository.CreateAsync(employee);
 
         return new ServiceResult<Employee>()
         {

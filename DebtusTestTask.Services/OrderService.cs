@@ -1,28 +1,38 @@
-﻿using DebtusTestTask.Application;
+﻿using DebtusTestTask.Application.Repositories;
+using DebtusTestTask.Application.Services;
 using DebtusTestTask.Contracts.Input;
-using DebtusTestTask.Infrastructure;
 using DebtusTestTask.Models;
 using DebtusTestTask.Utils;
-using Microsoft.EntityFrameworkCore;
 
 namespace DebtusTestTask.Services;
 
 public class OrderService : IOrderService
 {
-    private readonly DebtusContext _context;
+    private readonly IEmployeeRepository _employeeRepository;
+    private readonly ICurrencieRepository _currencieRepository;
+    private readonly IEventRepository _eventRepository;
 
-    public OrderService(DebtusContext context)
+    private readonly IOrderRepository _orderRepository;
+
+    public OrderService(
+        IEventRepository eventRepository,
+        ICurrencieRepository currencieRepository,
+        IEmployeeRepository employeeRepository,
+        IOrderRepository orderRepository)
     {
-        _context = context;
+        _eventRepository = eventRepository;
+        _employeeRepository = employeeRepository;
+        _currencieRepository = currencieRepository;
+        _orderRepository = orderRepository;
     }
 
     public async Task<ServiceResult<Order>> CreateOrderAsync(OrderCreateBody body)
     {
         var errors = new List<string>();
 
-        var employee = await _context.Employees.FirstOrDefaultAsync(x => x.Id == body.EmployeeId);
-        var currency = await _context.Currencies.FirstOrDefaultAsync(x => x.Name == body.Currency);
-        var @event = await _context.Events.FirstOrDefaultAsync(x => x.Name == body.Event);
+        var employee = await _employeeRepository.GetByIdAsync(body.EmployeeId);
+        var currency = await _currencieRepository.FirsrOrDefaultAsync(x => x.Name == body.Currency);
+        var @event = await _eventRepository.FirsrOrDefaultAsync(x=>x.Name == body.Event);
 
         if (employee is null) 
             errors.Add("employee not found");
@@ -50,8 +60,7 @@ public class OrderService : IOrderService
             Employee = employee,
         };
 
-        _context.Orders.Add(order);
-        await _context.SaveChangesAsync();
+        await _orderRepository.CreateAsync(order);
 
         return new ServiceResult<Order>() { IsSuccessfull = true, Result = order };
     }

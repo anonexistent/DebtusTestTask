@@ -2,7 +2,7 @@
 using DebtusTestTask.Models;
 using DebtusTestTask.Utils;
 
-namespace DebtusTestTask.Application;
+namespace DebtusTestTask.Application.Services;
 
 public interface IOrderService
 {
