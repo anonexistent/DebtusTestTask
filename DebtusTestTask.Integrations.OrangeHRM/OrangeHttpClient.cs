@@ -21,7 +21,7 @@ public class OrangeHttpClient
         };
         _client = new HttpClient(_handler);
         _baseUrl = "https://opensource-demo.orangehrmlive.com";
-        _loginUrl = _baseUrl + "/web/index.php/auth/login";
+        _loginUrl = _baseUrl + "/" + "web/index.php/auth/login";
         _username = username;
         _password = password;
     }
@@ -29,24 +29,36 @@ public class OrangeHttpClient
     public async Task<string> GetAuthCookieAsync()
     {
         using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true });
-        var page = await browser.NewPageAsync();
+        await using var browser = await playwright.Chromium.LaunchAsync(new()
+        {
+            Headless = true,
+            Timeout = 15000,
+            
+        });
 
-        await page.GotoAsync(_loginUrl);
+        var context = await browser.NewContextAsync();
+        var page = await context.NewPageAsync();
 
-        await page.TypeAsync("input[name='username']", _username);
-        await page.TypeAsync("input[name='password']", _password);
+        // Навигация на страницу входа
+        await page.GotoAsync(_loginUrl, new() { WaitUntil = WaitUntilState.NetworkIdle });
 
-        await page.ClickAsync("button[type='submit']");
+        // Используем FillAsync вместо TypeAsync
+        await page.Locator("input[name='username']").FillAsync(_username);
+        await page.Locator("input[name='password']").FillAsync(_password);
 
-        await page.WaitForNavigationAsync();
+        // Нажимаем на кнопку и ждём переход
+        await Task.WhenAll(
+            page.WaitForURLAsync($"{_baseUrl}/**"), // ожидаем переход на базовый URL
+            page.Locator("button[type='submit']").ClickAsync()
+        );
 
-        var cookies = await page.Context.CookiesAsync([ _baseUrl ]);
+        // Получаем cookies из контекста
+        var cookies = await context.CookiesAsync();
         var authCookie = cookies.FirstOrDefault(c => c.Name == "orangehrm")?.Value;
 
         if (string.IsNullOrEmpty(authCookie))
         {
-            throw new Exception("Failed to retrieve orangehrm cookie");
+            throw new Exception("Failed to retrieve 'orangehrm' cookie.");
         }
 
         return authCookie;
