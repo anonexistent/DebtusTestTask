@@ -1,6 +1,7 @@
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace DebtusTestTask.Contracts.Input;
+namespace DebtusTestTask.Integrations.OrangeHRM.Contracts.Input;
 
 public record EmployeeCreateBody
 {
@@ -15,9 +16,9 @@ public record EmployeeCreateBody
     [JsonPropertyName("middleName")]
     public required string MiddleName { get; set; }
 
-    [JsonPropertyName("joinedDate")]
-    public required DateTime JoinedDate { get; set; }
-
-    [JsonPropertyName("job")]
-    public required JobCreateBody Job { get; set; }
+    public static implicit operator HttpContent(EmployeeCreateBody v)
+    {
+        var json = JsonSerializer.Serialize(v);
+        return new StringContent(json, default , "application/json");
+    }
 };

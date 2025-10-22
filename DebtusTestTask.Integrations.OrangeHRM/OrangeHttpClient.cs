@@ -1,4 +1,5 @@
-﻿using Microsoft.Playwright;
+﻿using DebtusTestTask.Integrations.OrangeHRM.Contracts.Input;
+using Microsoft.Playwright;
 using System.Net;
 
 namespace DebtusTestTask.Integrations.OrangeHRM;
@@ -12,6 +13,10 @@ public class OrangeHttpClient
     private readonly string _username;
     private readonly string _password;
 
+    private string _cookie { get { return GetAuthCookieAsync().GetAwaiter().GetResult(); } }
+
+    private readonly string _employeePostUrl;
+
     public OrangeHttpClient(string username = "admin", string password = "admin123")
     {
         _handler = new HttpClientHandler
@@ -20,10 +25,40 @@ public class OrangeHttpClient
             CookieContainer = new CookieContainer()
         };
         _client = new HttpClient(_handler);
+
         _baseUrl = "https://opensource-demo.orangehrmlive.com";
         _loginUrl = _baseUrl + "/" + "web/index.php/auth/login";
+        _employeePostUrl = _baseUrl + "/" + "web/index.php/api/v2/pim/employees";
+
         _username = username;
         _password = password;
+    }
+
+    public async Task<(HttpStatusCode code, string message)> EmployeePostAsync(EmployeeCreateBody b)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, _employeePostUrl);
+        request.Headers.Add("Cookie", $"orangehrm={_cookie}");
+        request.Content = b;
+        Console.WriteLine(b);
+        var response = await _client.SendAsync(request);
+
+        //response.EnsureSuccessStatusCode();
+
+        var resultCode = response.StatusCode;
+        var result = await response.Content.ReadAsStringAsync();
+
+        return (resultCode, result);
+    }
+
+    public async Task<bool> CallApiAsync(string apiEndpoint, string cookie)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, _baseUrl + apiEndpoint);
+        request.Headers.Add("Cookie", $"orangehrm={cookie}");
+        var response = await _client.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadAsStringAsync();
+
+        return true;
     }
 
     public async Task<string> GetAuthCookieAsync()
@@ -62,15 +97,5 @@ public class OrangeHttpClient
         }
 
         return authCookie;
-    }
-
-    // Пример использования cookie в API-запросе
-    public async Task<string> CallApiAsync(string apiEndpoint, string cookie)
-    {
-        var request = new HttpRequestMessage(HttpMethod.Get, _baseUrl + apiEndpoint);
-        request.Headers.Add("Cookie", $"orangehrm={cookie}");
-        var response = await _client.SendAsync(request);
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsStringAsync();
     }
 }
