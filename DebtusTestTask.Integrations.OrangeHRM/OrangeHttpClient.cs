@@ -1,6 +1,8 @@
 ﻿using DebtusTestTask.Integrations.OrangeHRM.Contracts.Input;
+using DebtusTestTask.Integrations.OrangeHRM.Contracts.Output;
 using Microsoft.Playwright;
 using System.Net;
+using System.Text.Json;
 
 namespace DebtusTestTask.Integrations.OrangeHRM;
 
@@ -16,6 +18,7 @@ public class OrangeHttpClient
     private string _cookie { get { return GetAuthCookieAsync().GetAwaiter().GetResult(); } }
 
     private readonly string _employeePostUrl;
+    private readonly string _employeeJobPutUrl;
 
     public OrangeHttpClient(string username = "admin", string password = "admin123")
     {
@@ -29,6 +32,7 @@ public class OrangeHttpClient
         _baseUrl = "https://opensource-demo.orangehrmlive.com";
         _loginUrl = _baseUrl + "/" + "web/index.php/auth/login";
         _employeePostUrl = _baseUrl + "/" + "web/index.php/api/v2/pim/employees";
+        _employeeJobPutUrl = _baseUrl + "/" + "web/index.php/api/v2/pim/employees/{!!!!!empNumber!!!!!}/job-details";
 
         _username = username;
         _password = password;
@@ -39,7 +43,23 @@ public class OrangeHttpClient
         var request = new HttpRequestMessage(HttpMethod.Post, _employeePostUrl);
         request.Headers.Add("Cookie", $"orangehrm={_cookie}");
         request.Content = b;
-        Console.WriteLine(b);
+
+        var response = await _client.SendAsync(request);
+
+        //response.EnsureSuccessStatusCode();
+
+        var resultCode = response.StatusCode;
+        var result = await response.Content.ReadAsStringAsync();
+
+        return (resultCode, result);
+    }
+
+    public async Task<(HttpStatusCode code, string message)> EmployeeJobPutAsync(JobCreateBody b)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Put, _employeeJobPutUrl);
+        request.Headers.Add("Cookie", $"orangehrm={_cookie}");
+        request.Content = b;
+
         var response = await _client.SendAsync(request);
 
         //response.EnsureSuccessStatusCode();

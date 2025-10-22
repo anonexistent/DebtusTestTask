@@ -7,6 +7,8 @@ public class Employee
     [Key]
     public string Id { get; set; }
 
+    public int EmpNumber { get; set; }
+
     [Required]
     [MaxLength(50)]
     public string LastName { get; set; }

@@ -4,7 +4,10 @@ using DebtusTestTask.Application.Services;
 using DebtusTestTask.Contracts.Input;
 using DebtusTestTask.Models;
 using DebtusTestTask.Utils;
+using System.Text.Json;
 using BodyDto = DebtusTestTask.Integrations.OrangeHRM.Contracts.Input.EmployeeCreateBody;
+using JobBodyDto = DebtusTestTask.Integrations.OrangeHRM.Contracts.Input.JobCreateBody;
+using OrangeResult = DebtusTestTask.Integrations.OrangeHRM.Contracts.Output.SuccessEmployeeResponse;
 
 namespace DebtusTestTask.Integrations.OrangeHRM.Services;
 
@@ -14,7 +17,6 @@ public class EmployeeService : IEmployeeService
     private readonly ICurrencieRepository _currencieRepository;
 
     private readonly OrangeHttpClient _orangeHttpClient;
-
 
     private readonly IMapper _mapper;
 
@@ -33,15 +35,37 @@ public class EmployeeService : IEmployeeService
         _mapper = mapper;
     }
 
+    public async Task<ServiceResult<Employee>> CreateEmployeeWithJobAsync(EmployeeCreateBody request)
+    {
+        var employeeResult = await CreateEmployeeAsync(request);
+        if(!employeeResult.IsSuccessfull)
+        {
+            return new ServiceResult<Employee>()
+            {
+                IsSuccessfull = false,
+                Messages = employeeResult.Messages,
+            };
+        }
+
+        //  должно быть создание пользователя + создание его работы
+
+        //  TODO: return value
+        return null;
+    }
+
     public async Task<ServiceResult<Employee>> CreateEmployeeAsync(EmployeeCreateBody request)
     {
         var b = _mapper.Map<BodyDto>(request);
+        var jb = _mapper.Map<JobBodyDto>(request.Job);
 
         var (httpCode, message) = await _orangeHttpClient.EmployeePostAsync(b);
 
-        if(httpCode is System.Net.HttpStatusCode.OK)
+        var orangeResult = JsonSerializer.Deserialize<OrangeResult>(message)
+            ?? throw new Exception("orange response parsing error");
+
+        if (httpCode is System.Net.HttpStatusCode.OK)
         {
-            var employeeResult = await CommitEmployeeAsync(request);
+            var employeeResult = await CommitEmployeeAsync(orangeResult.Data.EmpNumber, request);
 
             return employeeResult;
         }
@@ -53,7 +77,7 @@ public class EmployeeService : IEmployeeService
         };
     }
 
-    private async Task<ServiceResult<Employee>> CommitEmployeeAsync(EmployeeCreateBody request)
+    private async Task<ServiceResult<Employee>> CommitEmployeeAsync(int empNumber, EmployeeCreateBody request)
     {
         var currs = await _currencieRepository.GetAllAsync();
 
@@ -73,6 +97,8 @@ public class EmployeeService : IEmployeeService
         var employee = new Employee
         {
             Id = request.Id,
+
+            EmpNumber = empNumber,
 
             LastName = request.LastName,
             FirstName = request.FirstName,

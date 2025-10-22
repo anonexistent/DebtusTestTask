@@ -14,7 +14,7 @@ public class DebtusContext : DbContext
     public DebtusContext(DbContextOptions<DebtusContext> options) 
         : base(options)
     {
-        //Database.EnsureDeleted();
+        Database.EnsureDeleted();
         Database.EnsureCreated();
     }
 
