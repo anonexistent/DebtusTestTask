@@ -29,7 +29,8 @@
   <ItemGroup>
     <ProjectReference Include="..\DebtusTestTask.Infrastructure\DebtusTestTask.Infrastructure.csproj" />
     <ProjectReference Include="..\DebtusTestTask.Integrations.OrangeHRM\DebtusTestTask.Integrations.OrangeHRM.csproj" />
-    <ProjectReference Include="..\DebtusTestTask.Services\DebtusTestTask.Services.csproj" />
+    <ProjectReference Include="..\DebtusTestTask.Integrations.OrangeHRM.Services\DebtusTestTask.Integrations.OrangeHRM.Services.csproj" />
+	  
     <ProjectReference Include="..\DebtusTestTask.Utils\DebtusTestTask.Utils.csproj" />
   </ItemGroup>
 

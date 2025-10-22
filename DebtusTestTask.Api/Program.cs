@@ -1,5 +1,7 @@
 using DebtusTestTask.Infrastructure;
-using DebtusTestTask.Services;
+using DebtusTestTask.Integrations.OrangeHRM;
+using DebtusTestTask.Integrations.OrangeHRM.Services;
+using DebtusTestTask.Integrations.OrangeHRM.Services.Profiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +17,15 @@ services.AddDbContext<DebtusContext>(options =>
     options.UseSqlite(defaultConnectionString), ServiceLifetime.Transient);
 
 services.AddRepositories();
-services.AddServices();
+services.AddSingleton<OrangeHttpClient>();
+services.AddOrangeServices();
+
+services.AddAutoMapper((config) =>
+    {
+        config.AddProfile(typeof(OrderCreateBodyProfile));
+        config.AddProfile(typeof(EmployeeCreteBodyProfile));
+    }
+);
 
 services.AddControllers();
 

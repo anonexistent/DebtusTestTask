@@ -3,6 +3,7 @@ using DebtusTestTask.Contracts.Input;
 using DebtusTestTask.Contracts.Output;
 using DebtusTestTask.Integrations.OrangeHRM;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -22,14 +23,23 @@ public class MainApiController : ControllerBase
         _orderService = orderService;
     }
 
+    [Obsolete]
     [HttpPost]
-    public async Task<IActionResult> CreateEmployee([FromBody] EmployeeCreateBody body)
+    public async Task<IActionResult> CreateEmployeeOld([FromBody] EmployeeCreateBody body)
     {
         var result = await _employeeService.CreateEmployeeAsync(body);
 
         if (!result.IsSuccessfull || result.Result is null) return BadRequest(new ErrorResponse() { Success = result.IsSuccessfull, ErrorMessage = result.Messages.FirstOrDefault() });
 
         return Ok(new SuccessEmployeeResponse() { Success = result.IsSuccessfull, EmployeeId = result.Result.Id });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateEmployee([FromBody] EmployeeCreateBody body)
+    {
+        var empl = await _employeeService.CreateEmployeeAsync(body);
+
+        return Ok(empl);
     }
 
     [HttpPost]
@@ -47,12 +57,24 @@ public class MainApiController : ControllerBase
     {
         var client = new OrangeHttpClient();
 
-        var cookies = await client.GetAuthCookieAsync();
+        //var cookies = await client.GetAuthCookieAsync();
 
         //  https://opensource-demo.orangehrmlive.com/web/index.php/api/v2/admin/job-titles?limit=0
 
-        var sample = await client.CallApiAsync("/web/index.php/api/v2/admin/job-titles?limit=0", cookies);
+        //var sample = await client.CallApiAsync("/web/index.php/api/v2/admin/job-titles?limit=0", cookies);
 
-        return Ok();
+        var b = new EmployeeCreateBody()
+        {
+            Id = "asd" + new Random().Next(0, 9999).ToString(),
+
+            FirstName ="asd",
+            MiddleName = "asd",
+            LastName = "asd",
+            JoinedDate=System.DateTime.Now,
+            Job = new JobCreateBody() { EmploymentStatus = "asd", JobCategory = "asd", JobTitle ="asd", Location="asd",SubUnit="asd", },
+        };
+        var empl = await _employeeService.CreateEmployeeAsync(b);
+
+        return Ok(empl);
     }
 }

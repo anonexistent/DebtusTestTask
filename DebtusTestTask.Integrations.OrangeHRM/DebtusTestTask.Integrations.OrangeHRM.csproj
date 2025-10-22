@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  
+    <PackageReference Include="Microsoft.Playwright" Version="1.48.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Playwright" Version="1.48.0" />
+    <ProjectReference Include="..\DebtusTestTask.Integrations.OrangeHRM.Contracts\DebtusTestTask.Integrations.OrangeHRM.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
