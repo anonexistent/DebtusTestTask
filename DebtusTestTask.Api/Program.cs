@@ -13,6 +13,8 @@ var services = builder.Services;
 var defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 services.AddDbContext<DebtusContext>(options =>
     options.UseSqlite(defaultConnectionString), ServiceLifetime.Transient);
+
+services.AddRepositories();
 services.AddServices();
 
 services.AddControllers();
