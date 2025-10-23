@@ -2,7 +2,7 @@
 
 namespace DebtusTestTask.Integrations.OrangeHRM.Contracts.Output;
 
-public record SuccessEventResponse
+public record SuccessEventGetResponse
 {
     [JsonPropertyName("data")]
     public SuccessEventDataItemResponse[] Data { get; set; }

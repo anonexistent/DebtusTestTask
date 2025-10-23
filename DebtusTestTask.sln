@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebtusTestTask.Integrations
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebtusTestTask.Integrations.OrangeHRM.Contracts", "DebtusTestTask.Integrations.OrangeHRM.Contracts\DebtusTestTask.Integrations.OrangeHRM.Contracts.csproj", "{0FEB7027-DBD5-485F-9AF4-47A1B1999CAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebtusTestTask.Infrastructure.Data", "DebtusTestTask.Infrastructure.Data\DebtusTestTask.Infrastructure.Data.csproj", "{7CAA08B5-D75B-47C7-AA99-7845AF0684EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{0FEB7027-DBD5-485F-9AF4-47A1B1999CAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FEB7027-DBD5-485F-9AF4-47A1B1999CAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FEB7027-DBD5-485F-9AF4-47A1B1999CAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CAA08B5-D75B-47C7-AA99-7845AF0684EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CAA08B5-D75B-47C7-AA99-7845AF0684EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CAA08B5-D75B-47C7-AA99-7845AF0684EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CAA08B5-D75B-47C7-AA99-7845AF0684EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DebtusTestTask.Infrastructure.Data\DebtusTestTask.Infrastructure.Data.csproj" />
     <ProjectReference Include="..\DebtusTestTask.Infrastructure\DebtusTestTask.Infrastructure.csproj" />
     <ProjectReference Include="..\DebtusTestTask.Integrations.OrangeHRM\DebtusTestTask.Integrations.OrangeHRM.csproj" />
     <ProjectReference Include="..\DebtusTestTask.Integrations.OrangeHRM.Services\DebtusTestTask.Integrations.OrangeHRM.Services.csproj" />
