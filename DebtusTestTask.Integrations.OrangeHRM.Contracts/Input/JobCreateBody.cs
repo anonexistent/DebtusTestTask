@@ -6,22 +6,22 @@ namespace DebtusTestTask.Integrations.OrangeHRM.Contracts.Input;
 public record JobCreateBody
 {
     [JsonPropertyName("joinedDate")]
-    public required DateTime JoinedDate { get; set; }
+    public DateTime? JoinedDate { get; set; }
 
     [JsonPropertyName("jobTitleId")]
-    public required int JobTitle { get; set; }
+    public required int JobTitleId { get; set; }
 
-    [JsonPropertyName("jobCategory")]
-    public required string JobCategory { get; set; }
+    [JsonPropertyName("jobCategoryId")]
+    public required int JobCategoryId { get; set; }
 
-    [JsonPropertyName("subUnit")]
-    public required string SubUnit { get; set; }
+    [JsonPropertyName("subunitId")]
+    public required int SubUnitId { get; set; }
 
-    [JsonPropertyName("location")]
-    public required string Location { get; set; }
-
-    [JsonPropertyName("employmentStatus")]
-    public required string EmploymentStatus { get; set; }
+    [JsonPropertyName("locationId")]
+    public required int LocationId { get; set; }
+        
+    [JsonPropertyName("empStatusId")]
+    public required int EmploymentStatusId { get; set; }
 
     public static implicit operator HttpContent(JobCreateBody v)
     {

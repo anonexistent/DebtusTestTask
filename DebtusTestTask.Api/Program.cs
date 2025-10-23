@@ -24,6 +24,7 @@ services.AddAutoMapper((config) =>
     {
         config.AddProfile(typeof(OrderCreateBodyProfile));
         config.AddProfile(typeof(EmployeeCreteBodyProfile));
+        config.AddProfile(typeof(JobCreateBodyProfile));
     }
 );
 

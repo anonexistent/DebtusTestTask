@@ -18,7 +18,6 @@ public class OrangeHttpClient
     private string _cookie { get { return GetAuthCookieAsync().GetAwaiter().GetResult(); } }
 
     private readonly string _employeePostUrl;
-    private readonly string _employeeJobPutUrl;
 
     public OrangeHttpClient(string username = "admin", string password = "admin123")
     {
@@ -32,7 +31,6 @@ public class OrangeHttpClient
         _baseUrl = "https://opensource-demo.orangehrmlive.com";
         _loginUrl = _baseUrl + "/" + "web/index.php/auth/login";
         _employeePostUrl = _baseUrl + "/" + "web/index.php/api/v2/pim/employees";
-        _employeeJobPutUrl = _baseUrl + "/" + "web/index.php/api/v2/pim/employees/{!!!!!empNumber!!!!!}/job-details";
 
         _username = username;
         _password = password;
@@ -54,9 +52,9 @@ public class OrangeHttpClient
         return (resultCode, result);
     }
 
-    public async Task<(HttpStatusCode code, string message)> EmployeeJobPutAsync(JobCreateBody b)
+    public async Task<(HttpStatusCode code, string message)> EmployeeJobPutAsync(string employeeNumber, JobCreateBody b)
     {
-        var request = new HttpRequestMessage(HttpMethod.Put, _employeeJobPutUrl);
+        var request = new HttpRequestMessage(HttpMethod.Put, GetEmployeeJobPutUrl(employeeNumber));
         request.Headers.Add("Cookie", $"orangehrm={_cookie}");
         request.Content = b;
 
@@ -118,4 +116,7 @@ public class OrangeHttpClient
 
         return authCookie;
     }
+
+    private string GetEmployeeJobPutUrl(string empNum)
+        => _baseUrl + "/" + $"web/index.php/api/v2/pim/employees/{empNum}/job-details";
 }

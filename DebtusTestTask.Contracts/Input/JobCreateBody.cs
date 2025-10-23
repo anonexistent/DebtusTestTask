@@ -4,14 +4,21 @@ namespace DebtusTestTask.Contracts.Input;
 
 public record JobCreateBody
 {
-    [JsonPropertyName("jobTitle")]
-    public required string JobTitle { get; set; }
-    [JsonPropertyName("jobCategory")]
-    public required string JobCategory { get; set; }
-    [JsonPropertyName("subUnit")]
-    public required string SubUnit { get; set; }
-    [JsonPropertyName("location")]
-    public required string Location { get; set; }
-    [JsonPropertyName("employmentStatus")]
-    public required string EmploymentStatus { get; set; }
+    [JsonPropertyName("joinedDate")]
+    public DateTime? JoinedDate { get; set; }
+
+    [JsonPropertyName("jobTitleId")]
+    public required int JobTitleId { get; set; }
+
+    [JsonPropertyName("jobCategoryId")]
+    public required int JobCategoryId { get; set; }
+
+    [JsonPropertyName("subunitId")]
+    public required int SubUnitId { get; set; }
+
+    [JsonPropertyName("locationId")]
+    public required int LocationId { get; set; }
+
+    [JsonPropertyName("empStatusId")]
+    public required int EmploymentStatusId { get; set; }
 };
