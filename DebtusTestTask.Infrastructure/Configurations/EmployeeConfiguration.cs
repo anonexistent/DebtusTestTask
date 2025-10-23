@@ -8,6 +8,8 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
 {
     public void Configure(EntityTypeBuilder<Employee> builder)
     {
+        Console.WriteLine("eployee configuring...");
+
         builder
             .HasIndex(o => o.Id)
             .IsUnique();

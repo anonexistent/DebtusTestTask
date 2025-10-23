@@ -2,7 +2,7 @@
 using DebtusTestTask.Models;
 using System.Linq.Expressions;
 using System.Text.Json;
-using OrangeResult = DebtusTestTask.Integrations.OrangeHRM.Contracts.Output.SuccessEventResponse;
+using OrangeResult = DebtusTestTask.Integrations.OrangeHRM.Contracts.Output.SuccessEventGetResponse;
 
 namespace DebtusTestTask.Integrations.OrangeHRM.Services.Repositories;
 

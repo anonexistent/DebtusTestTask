@@ -16,6 +16,7 @@ public class OrangeHttpClient
     private string _cookie { get { return GetAuthCookieAsync().GetAwaiter().GetResult(); } }
 
     private readonly string _eventGetUrl;
+    private readonly string _employeeGetUrl;
 
     private readonly string _employeePostUrl;
 
@@ -31,6 +32,7 @@ public class OrangeHttpClient
         _baseUrl = "https://opensource-demo.orangehrmlive.com";
 
         _eventGetUrl = _baseUrl + "/" + "web/index.php/api/v2/claim/events?limit=0&status=true";
+        _employeeGetUrl = _baseUrl + "/" + "web/index.php/api/v2/pim/employees?limit=0&offset=0&model=detailed&includeEmployees=onlyCurrent&sortField=employee.firstName&sortOrder=ASC";
         _loginUrl = _baseUrl + "/" + "web/index.php/auth/login";
         _employeePostUrl = _baseUrl + "/" + "web/index.php/api/v2/pim/employees";
 
@@ -73,6 +75,21 @@ public class OrangeHttpClient
     public async Task<(HttpStatusCode code, string message)> EventGetListAsync()
     {
         var request = new HttpRequestMessage(HttpMethod.Get, _eventGetUrl);
+        request.Headers.Add("Cookie", $"orangehrm={_cookie}");
+
+        var response = await _client.SendAsync(request);
+
+        //response.EnsureSuccessStatusCode();
+
+        var resultCode = response.StatusCode;
+        var result = await response.Content.ReadAsStringAsync();
+
+        return (resultCode, result);
+    }
+
+    public async Task<(HttpStatusCode code, string message)> EmployeeGetListAsync()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, _employeeGetUrl);
         request.Headers.Add("Cookie", $"orangehrm={_cookie}");
 
         var response = await _client.SendAsync(request);
