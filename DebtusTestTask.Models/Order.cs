@@ -14,5 +14,5 @@ public class Order
     [ForeignKey("employeeId")]
     public string EmployeeId { get; set; }
 
-    public virtual Employee Employee { get; set; }
+    //public virtual Employee? Employee { get; set; }
 }

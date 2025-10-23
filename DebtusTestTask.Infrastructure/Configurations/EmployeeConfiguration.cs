@@ -22,7 +22,7 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
             .Property(e => e.LastName)
             .IsRequired();
 
-        builder.HasMany<Order>(x=>x.Orders)
-            .WithOne();
+        //builder.HasMany<Order>(x=>x.Orders)
+        //    .WithOne();
     }
 }
