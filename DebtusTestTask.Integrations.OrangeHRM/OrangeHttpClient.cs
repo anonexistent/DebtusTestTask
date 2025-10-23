@@ -1,8 +1,6 @@
 ﻿using DebtusTestTask.Integrations.OrangeHRM.Contracts.Input;
-using DebtusTestTask.Integrations.OrangeHRM.Contracts.Output;
 using Microsoft.Playwright;
 using System.Net;
-using System.Text.Json;
 
 namespace DebtusTestTask.Integrations.OrangeHRM;
 
@@ -17,6 +15,8 @@ public class OrangeHttpClient
 
     private string _cookie { get { return GetAuthCookieAsync().GetAwaiter().GetResult(); } }
 
+    private readonly string _eventGetUrl;
+
     private readonly string _employeePostUrl;
 
     public OrangeHttpClient(string username = "admin", string password = "admin123")
@@ -29,6 +29,8 @@ public class OrangeHttpClient
         _client = new HttpClient(_handler);
 
         _baseUrl = "https://opensource-demo.orangehrmlive.com";
+
+        _eventGetUrl = _baseUrl + "/" + "web/index.php/api/v2/claim/events?limit=0&status=true";
         _loginUrl = _baseUrl + "/" + "web/index.php/auth/login";
         _employeePostUrl = _baseUrl + "/" + "web/index.php/api/v2/pim/employees";
 
@@ -68,17 +70,39 @@ public class OrangeHttpClient
         return (resultCode, result);
     }
 
-    public async Task<bool> CallApiAsync(string apiEndpoint, string cookie)
+    public async Task<(HttpStatusCode code, string message)> EventGetListAsync()
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, _baseUrl + apiEndpoint);
-        request.Headers.Add("Cookie", $"orangehrm={cookie}");
+        var request = new HttpRequestMessage(HttpMethod.Get, _eventGetUrl);
+        request.Headers.Add("Cookie", $"orangehrm={_cookie}");
+
         var response = await _client.SendAsync(request);
-        response.EnsureSuccessStatusCode();
+
+        //response.EnsureSuccessStatusCode();
+
+        var resultCode = response.StatusCode;
         var result = await response.Content.ReadAsStringAsync();
 
-        return true;
+        return (resultCode, result);
     }
 
+    public async Task<(HttpStatusCode code, string message)> OrderPostAsync(string employeeNumber, OrderCreateBody b)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, GetOrderPostUrl(employeeNumber));
+        request.Headers.Add("Cookie", $"orangehrm={_cookie}");
+        request.Content = b;
+
+        var response = await _client.SendAsync(request);
+
+        //response.EnsureSuccessStatusCode();
+
+        var resultCode = response.StatusCode;
+        var result = await response.Content.ReadAsStringAsync();
+
+        return (resultCode, result);
+    }
+
+
+    //  TODO: move to singletone / scoped
     public async Task<string> GetAuthCookieAsync()
     {
         using var playwright = await Playwright.CreateAsync();
@@ -119,4 +143,7 @@ public class OrangeHttpClient
 
     private string GetEmployeeJobPutUrl(string empNum)
         => _baseUrl + "/" + $"web/index.php/api/v2/pim/employees/{empNum}/job-details";
+
+    private string GetOrderPostUrl(string empNum)
+        => _baseUrl + "/" + $"web/index.php/api/v2/claim/employees/{empNum}/requests";
 }

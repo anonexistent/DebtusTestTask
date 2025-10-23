@@ -2,19 +2,17 @@
 
 namespace DebtusTestTask.Integrations.OrangeHRM.Contracts.Output;
 
-public record SuccessJobResponse
+public record SuccessOrderResponse
 {
     [JsonPropertyName("data")]
-    public SuccessJobResponseData Data { get; set; }
+    public SuccessOrderResponseData Data { get; set; }
 
     [JsonPropertyName("meta")]
     public object Meta { get; set; }
 
     [JsonPropertyName("rels")]
     public object Rels { get; set; }
-};
+}
 
-public class SuccessJobResponseData : Dictionary<string, dynamic>
-{
-        
-};
+public class SuccessOrderResponseData : Dictionary<string, dynamic>
+{ }

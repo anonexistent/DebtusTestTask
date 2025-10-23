@@ -35,4 +35,9 @@ public class EmployeeRepository : IEmployeeRepository
     {
         return await _context.Employees.FirstOrDefaultAsync(x => x.Id == employeeId);
     }
+
+    public async Task<Employee> GetByNumberAsync(int employeeId)
+    {
+        return await _context.Employees.FirstOrDefaultAsync(x => x.EmpNumber == employeeId);
+    }
 }

@@ -1,3 +1,4 @@
+using DebtusTestTask.Application.Repositories;
 using DebtusTestTask.Infrastructure;
 using DebtusTestTask.Integrations.OrangeHRM;
 using DebtusTestTask.Integrations.OrangeHRM.Services;
@@ -17,6 +18,7 @@ services.AddDbContext<DebtusContext>(options =>
     options.UseSqlite(defaultConnectionString), ServiceLifetime.Transient);
 
 services.AddRepositories();
+services.AddTransient<IEventRepository, DebtusTestTask.Integrations.OrangeHRM.Services.Repositories.EventRepository>();
 services.AddSingleton<OrangeHttpClient>();
 services.AddOrangeServices();
 

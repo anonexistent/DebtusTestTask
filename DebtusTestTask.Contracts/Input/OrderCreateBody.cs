@@ -4,13 +4,14 @@ namespace DebtusTestTask.Contracts.Input;
 
 public record OrderCreateBody
 {
-    [JsonPropertyName("employeeId")]
-    public required string EmployeeId { get; set; }
-    [JsonPropertyName("event")]
-    public required string Event { get; set; }
+    [JsonPropertyName("employeeNumber")]
+    public required int EmployeeNumber { get; set; }
 
-    [JsonPropertyName("currency")]
-    public required string Currency { get; set; }
+    [JsonPropertyName("claimEventId")]
+    public required int ClaimEventId { get; set; }
+
+    [JsonPropertyName("currencyId")]
+    public required string CurrencyId { get; set; }
 
     [JsonPropertyName("remarks")]
     public required string Remarks { get; set; }
