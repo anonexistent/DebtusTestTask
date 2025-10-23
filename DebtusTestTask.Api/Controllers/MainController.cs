@@ -35,9 +35,11 @@ public class MainApiController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateEmployee([FromBody] EmployeeCreateBody body)
     {
-        var empl = await _employeeService.CreateEmployeeAsync(body);
+        var result = await _employeeService.CreateEmployeeAsync(body);
 
-        return Ok(empl);
+        if (!result.IsSuccessfull || result.Result is null) return BadRequest(new ErrorResponse() { Success = result.IsSuccessfull, ErrorMessage = result.Messages.FirstOrDefault() });
+
+        return Ok(new SuccessEmployeeResponse() { Success = result.IsSuccessfull, EmployeeId = result.Result.Id });
     }
 
     [HttpPost]

@@ -1,20 +1,26 @@
 using DebtusTestTask.Application.Repositories;
 using DebtusTestTask.Infrastructure;
-using DebtusTestTask.Infrastructure.Configurations;
 using DebtusTestTask.Infrastructure.Data;
 using DebtusTestTask.Integrations.OrangeHRM;
 using DebtusTestTask.Integrations.OrangeHRM.Services;
 using DebtusTestTask.Integrations.OrangeHRM.Services.Profiles;
-using DebtusTestTask.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
+using Serilog;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
+
+builder.Host.UseSerilog((context, configuration) =>
+{
+    configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .Enrich.WithProperty("Application", Assembly.GetEntryAssembly().GetName().Name);
+});
 
 var defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -25,7 +31,7 @@ services.AddDbContext<DebtusContext>(options =>
     .UseSqlite(defaultConnectionString)
     //  В EF 9 появились UseSeeding и UseAsyncSeeding методы
     //.UseAsyncSeeding()
-    , ServiceLifetime.Transient);
+    , ServiceLifetime.Singleton);
 
 services.AddRepositories();
 services.AddScoped<EmployeeDataSeeder>();

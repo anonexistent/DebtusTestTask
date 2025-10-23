@@ -19,5 +19,5 @@ public class Employee
     [MaxLength(50)]
     public string MiddleName { get; set; }
 
-    public virtual ICollection<Order> Orders { get; set; }
+    //public virtual ICollection<Order> Orders { get; set; }
 }

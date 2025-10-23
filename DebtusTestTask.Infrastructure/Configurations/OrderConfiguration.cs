@@ -26,8 +26,8 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .Property(e => e.Currency)
             .IsRequired();
 
-        builder.HasOne<Employee>()
-            .WithMany()
-            .HasForeignKey(x => x.EmployeeId);
+        //builder.HasOne<Employee>()
+        //    .WithMany()
+        //    .HasForeignKey(x => x.EmployeeId);
     }
 }

@@ -70,8 +70,11 @@ public class OrderService : IOrderService
     {
         var errors = new List<string>();
 
+        var ________debug = await _employeeRepository.GetAllAsync();
+        var ______________debug = await _currencieRepository.GetAllAsync();
+
         var employee = await _employeeRepository.GetByNumberAsync(body.EmployeeNumber);
-        var currency = await _currencieRepository.FirsrOrDefaultAsync(x => x.Name == body.CurrencyId);
+        var currency = await _currencieRepository.FirsrOrDefaultAsync(x => x.Id == body.CurrencyId);
         var @event = await _eventRepository.FirsrOrDefaultAsync(x => x.Id == body.ClaimEventId);
 
         if (employee is null)
@@ -97,7 +100,7 @@ public class OrderService : IOrderService
             Event = body.ClaimEventId.ToString(),
             Remarks = body.Remarks,
 
-            Employee = employee,
+            //Employee = employee,
         };
 
         await _orderRepository.CreateAsync(order);
