@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using DebtusTestTask.Contracts.Input;
-using BodyDto = DebtusTestTask.Integrations.OrangeHRM.Contracts.Input.EmployeeCreateBody;
+using BodyDto = DebtusTestTask.Contracts.Input.EmployeeCreateBody;
+using DebtusTestTask.Integrations.OrangeHRM.Contracts.Input;
 
 namespace DebtusTestTask.Integrations.OrangeHRM.Services.Profiles;
 
@@ -8,6 +8,6 @@ public class EmployeeCreteBodyProfile : Profile
 {
     public EmployeeCreteBodyProfile()
     {
-        CreateMap<EmployeeCreateBody, BodyDto>();
+        CreateMap<BodyDto, EmployeeCreateBody>();
     }
 }

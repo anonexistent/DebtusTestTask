@@ -70,8 +70,7 @@ public class MainApiController : ControllerBase
             FirstName ="asd",
             MiddleName = "asd",
             LastName = "asd",
-            JoinedDate=System.DateTime.Now,
-            Job = new JobCreateBody() { EmploymentStatus = "asd", JobCategory = "asd", JobTitle ="asd", Location="asd",SubUnit="asd", },
+            Job = new JobCreateBody() { JobCategoryId = 1, EmploymentStatusId = 4, JobTitleId = 6, LocationId = 3, SubUnitId = 4, },
         };
         var empl = await _employeeService.CreateEmployeeAsync(b);
 

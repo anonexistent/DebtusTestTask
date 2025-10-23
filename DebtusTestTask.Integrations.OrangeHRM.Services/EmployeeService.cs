@@ -8,6 +8,7 @@ using System.Text.Json;
 using BodyDto = DebtusTestTask.Integrations.OrangeHRM.Contracts.Input.EmployeeCreateBody;
 using JobBodyDto = DebtusTestTask.Integrations.OrangeHRM.Contracts.Input.JobCreateBody;
 using OrangeResult = DebtusTestTask.Integrations.OrangeHRM.Contracts.Output.SuccessEmployeeResponse;
+using OrangeJobResult = DebtusTestTask.Integrations.OrangeHRM.Contracts.Output.SuccessJobResponse;
 
 namespace DebtusTestTask.Integrations.OrangeHRM.Services;
 
@@ -35,25 +36,12 @@ public class EmployeeService : IEmployeeService
         _mapper = mapper;
     }
 
-    public async Task<ServiceResult<Employee>> CreateEmployeeWithJobAsync(EmployeeCreateBody request)
+    public async Task<ServiceResult<Employee>> CreateEmployeeAsync(EmployeeCreateBody request)
     {
-        var employeeResult = await CreateEmployeeAsync(request);
-        if(!employeeResult.IsSuccessfull)
-        {
-            return new ServiceResult<Employee>()
-            {
-                IsSuccessfull = false,
-                Messages = employeeResult.Messages,
-            };
-        }
-
-        //  должно быть создание пользователя + создание его работы
-
-        //  TODO: return value
-        return null;
+        return await CreateEmployeeWithJobAsync(request);
     }
 
-    public async Task<ServiceResult<Employee>> CreateEmployeeAsync(EmployeeCreateBody request)
+    private async Task<ServiceResult<Employee>> CreateEmplyeeEntityAsync(EmployeeCreateBody request)
     {
         var b = _mapper.Map<BodyDto>(request);
         var jb = _mapper.Map<JobBodyDto>(request.Job);
@@ -74,6 +62,56 @@ public class EmployeeService : IEmployeeService
         {
             IsSuccessfull = false,
             Messages = [message]
+        };
+    }
+
+    public async Task<ServiceResult<Employee>> CreateEmployeeWithJobAsync(EmployeeCreateBody request)
+    {
+        var employeeResult = await CreateEmplyeeEntityAsync(request);
+        if(!employeeResult.IsSuccessfull)
+        {
+            return new ServiceResult<Employee>()
+            {
+                IsSuccessfull = false,
+                Messages = employeeResult.Messages,
+            };
+        }
+
+        var jobResult = await CreateJobAsync(employeeResult.Result, request.Job);
+        if(!jobResult.IsSuccessfull)
+        {
+            return new ServiceResult<Employee>()
+            {
+                IsSuccessfull = false,
+                Messages = jobResult.Messages,
+            };
+        }
+
+        return employeeResult;
+    }
+
+    public async Task<ServiceResult<bool>> CreateJobAsync(Employee request, JobCreateBody body)
+    {
+        var jb = _mapper.Map<JobBodyDto>(body);
+
+        var (httpCode, message) = await _orangeHttpClient.EmployeeJobPutAsync(request.EmpNumber.ToString(), jb);
+
+        var orangeResult = JsonSerializer.Deserialize<OrangeJobResult>(message)
+            ?? throw new Exception("orange response parsing error");
+
+        if (httpCode is System.Net.HttpStatusCode.OK)
+        {
+            return new ServiceResult<bool>()
+            {
+                IsSuccessfull = true,
+                Result = true,
+            };
+        }
+
+        return new ServiceResult<bool>()
+        {
+            IsSuccessfull = false,
+            Messages = [message],
         };
     }
 

@@ -15,9 +15,6 @@ public record EmployeeCreateBody
     [JsonPropertyName("middleName")]
     public required string MiddleName { get; set; }
 
-    [JsonPropertyName("joinedDate")]
-    public required DateTime JoinedDate { get; set; }
-
     [JsonPropertyName("job")]
     public required JobCreateBody Job { get; set; }
 };
